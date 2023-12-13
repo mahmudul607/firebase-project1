@@ -27,6 +27,7 @@ const Login = () => {
         .then(result =>
             {setUser(null);
             console.log(result)
+            setLoginError("Logged Out Successfully");
         })
             .catch(error =>{
                 console.log(error);
@@ -39,8 +40,22 @@ const Login = () => {
         setLoginError(null)
         signInWithEmailAndPassword(auth, email, password)
         .then(result =>
-            {console.log(result.user)
-            setUser(result.user)}
+            {
+            if(result.user.emailVerified){
+                setLoginError("Your are logged in successfully");
+
+            }
+            else{
+                alert("Please check your email and verify account");
+                return;
+                
+            }
+            console.log(result.user)
+            setUser(result.user)
+            setLoginError("Your are logged in successfully");
+        
+        }
+
             )
         .catch(error => {
             console.log(error)
@@ -68,8 +83,10 @@ const Login = () => {
             <div className="md:max-w-3/6 mx-auto mb-4">
                 <div>
                     {
-                        loginError && <div>
+                        (loginError & user )? <div>
                             <h3 className="text-red-700">{loginError}</h3>
+                        </div> : <div>
+                             <h3 className="text-green-700">{loginError}</h3>
                         </div>
                     }
                 </div>
